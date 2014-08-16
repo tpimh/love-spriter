@@ -350,6 +350,7 @@ function Spriter:getAnimationByName( animationName )
 end --animationName
 
 --Apply all timeline transformations to heirarchy - no need to compute every frame
+--NOTE:  this method is deprecated.  My previous approach was incorrect.  I'm leaving this here temporarily in case I need to reference it
 function Spriter:applyTransformations()
 	for animationIndex = 1, # self.entity[1].animation do
 		local animation = self.entity[1].animation[animationIndex]
@@ -1125,7 +1126,7 @@ function Spriter:loadSpriter( path, directory )
 	spriterData:updateTimelineReferences()
 	--Update all objects in spriterData that parent IDs to reference the actual data in the spriterData object
 	spriterData:updateParentReferences()
-	--Apply all timeline transformations to heirarchy - no need to compute every frame
+	--NOTE:  this method is deprecated.  My previous approach was incorrect.  I'm leaving this here temporarily in case I need to reference it
 --	spriterData:applyTransformations()
 
 
