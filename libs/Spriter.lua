@@ -1082,6 +1082,239 @@ function Spriter:getAnimationNames()
 	return animationNames
 end
 
+--Convert spriter coordinates to Love-style coordinates.  
+--0,0 is center of screen positive y moves up from center of screen
+function Spriter:spriterToScreen( x, y )
+	local centerx = love.graphics:getWidth() / 2
+	local centery = love.graphics:getHeight() -200
+
+	x = centerx + x
+	y = centery - y
+
+	return x, y
+end
+
+
+--Using a shared canvas to avoid creating too many
+--Not sure if the best idea, and certainly clunky to hard-code w/h
+function Spriter:getCanvas()
+	if not self.canvas then
+		Spriter.canvas = love.graphics.newCanvas(800, 600)
+	end
+	return self.canvas
+end
+
+--Offset at which to render the spriter data.  
+function Spriter:setOffset( offsetX, offsetY)
+	self.offsetX = offsetX
+	self.offsetY = offsetY
+end
+
+function Spriter:getOffset()
+	local offsetX = self.offsetX or 0
+	local offsetY = self.offsetY or 0
+
+	return offsetX, offsetY
+end
+
+--Scale at which to render the spriter data
+function Spriter:setScale( scaleX, scaleY )
+	self.scaleX = scaleX
+	self.scaleY = scaleY
+end
+
+function Spriter:getScale()
+	local scaleX = self.scaleX or 1
+	local scaleY = self.scaleY or 1
+
+	return scaleX, scaleY
+end
+
+--When inverting the animation, it is usually necessary to render with a corresponding offset
+--This controls the offset used when rendering inverted
+function Spriter:setInversionOffset( inversionOffset )
+	self.inversionOffset = inversionOffset
+end
+
+function Spriter:getInversionOffset()
+	local inversionOffset = self.inversionOffset or 0
+
+	return inversionOffset
+end
+
+--Determines whether we are rendering the bones or not
+function Spriter:setDebug( debug )
+	self.debug = debug
+end
+function Spriter:getDebug()
+	return self.debug
+end
+
+--If true, we render the spriter data inverted
+function Spriter:getInverted()
+	return self.inverted
+end
+function Spriter:setInverted( inverted )
+	self.inverted = inverted
+end
+
+--Debugging function - draw bones.  NOTE:  bones currently not interpolated
+function Spriter:drawDebugInfo()
+	local frameData = self:getFrameData()
+
+	local currentColor = 1
+	local colors = {
+		{r=255,g=0,b=0},
+		{r=0,g=255,b=0},
+		{r=0,g=0,b=255},
+		{r=255,g=255,b=0},
+	}
+
+	local testImage 
+
+	if spew then
+		--This loop is to draw the corners of the image for image rotation debugging
+		--It is very noisy and spewy, so I only turn it on when I need to debug 
+		for i = 1, # frameData do
+			local imageData = frameData[i]
+			if imageData.dataType == "image" then
+				local x, y = self:spriterToScreen( imageData.x, imageData.y ) 
+
+				local corners = {
+					{x=x, y=y},
+					{x=x+imageData.image:getWidth(), y=y},
+					{x=x+imageData.image:getWidth(), y=y+imageData.image:getHeight()},
+					{x=x, y=y+imageData.image:getHeight()},
+				}
+				local pivotx = corners[1].x
+				local pivoty = corners[1].y
+
+				for cornerIndex = 1, # corners do
+					local x, y = corners[cornerIndex].x, corners[cornerIndex].y
+					local tlx, tly = Spriter:rotatePoint( x, y, -imageData.angle, pivotx, pivoty )
+
+					love.graphics.setColor(colors[currentColor].r, colors[currentColor].g, colors[currentColor].b)
+					currentColor = currentColor + 1
+					if currentColor > # colors then
+						currentColor = 1
+					end
+					love.graphics.circle( "fill", tlx, tly, 3, 100 )
+				end
+				love.graphics.setColor(255, 255, 255)
+				love.graphics.setColor(255, 255, 255)
+			end
+		end
+	end --spew
+
+	--Bone render for debugging
+	currentColor = 1
+	for i = 1, # frameData do
+		local data = frameData[i]
+		if data.dataType == "bone" then
+			local r = colors[currentColor].r
+			local g = colors[currentColor].g
+			local b = colors[currentColor].b
+			currentColor = currentColor + 1
+			if currentColor > # colors then
+				currentColor = 1
+			end
+
+			love.graphics.setColor(r, g, b)
+			local startx, starty = self:spriterToScreen( data.x, data.y )
+			local x2, y2 = self:spriterToScreen( data.x2, data.y2 )
+
+			love.graphics.circle( "fill", x2, y2, 3, 100 )
+			love.graphics.line(startx,starty, x2,y2)
+			love.graphics.setColor(255, 255, 255)
+			love.graphics.circle( "fill", startx, starty, 5, 100 )
+		end
+	end
+end --drawDebugInfo
+
+
+function Spriter:draw( x, y )
+	local canvas = self:getCanvas()
+
+	local frameData = self:getFrameData()
+
+	--In my engine I had transformations active during rendering
+	--I had to re-set everything to origin to render at origin of canvas
+	--This should be safe
+        love.graphics.push()
+	love.graphics.origin()
+
+	--Draw onto off-screen canvas for flipping
+	--I'm sure there's an algorithmic solution to flipping the animation, but
+	--This was easier to me initially
+	--I'm not sure how to cleanly build a bounding rect to create a good canvas size, so I'm just doing screen w/h for now
+	--All graphics operations from this point forward render to canvas instead of screen
+	love.graphics.setCanvas(canvas)
+	--Duh
+	canvas:clear()
+
+	--I believe this is the default, but in case it's set elsewhere:w
+	love.graphics.setBlendMode('alpha')
+
+	--Loop through framedata and render images (bones are also in array)
+	for i = 1, # frameData do
+		local imageData = frameData[i]
+		if imageData.dataType == "image" then
+			local x, y = self:spriterToScreen( imageData.x, imageData.y ) 
+
+			love.graphics.setColor(255, 255, 255)
+
+			--Pivot data is stored as 0-1, but actually represents an offset of 0-width or 0-height for rotation purposes
+			local pivotX = imageData.pivotX or 0
+			local pivotY = imageData.pivotY or 1
+			--Rescape pivot data from 0,1 to 0,w/h
+			pivotX = rescale( pivotX, 0, 1, 0, imageData.image:getWidth() )
+			--Love2D has Y inverted from Spriter behavior -- pivotY is height - pivotY value
+			pivotY = imageData.image:getHeight() - rescale( pivotY, 0, 1, 0, imageData.image:getHeight() )
+
+			love.graphics.draw(imageData.image, x, y, -imageData.angle, imageData.scale_x, imageData.scale_y, pivotX, pivotY)
+		end
+	end
+
+	if self:getDebug() then
+		self:drawDebugInfo()
+	end
+
+	--Turn off canvas.  Graphics operations now apply to screen
+	love.graphics.setCanvas()
+
+	-- The rectangle from the Canvas was already alpha blended.
+	-- Use the premultiplied blend mode when drawing the Canvas itself to prevent another blending.
+	love.graphics.setBlendMode('premultiplied')
+
+	--Return to transformations active prior to our draw
+        love.graphics.pop()
+
+	local scaleX, scaleY = self:getScale()
+	local xOffset, yOffset = self:getOffset()
+	local inversionOffset = self:getInversionOffset()
+
+	x = x + xOffset
+	y = y + yOffset
+
+	local inverted = self:getInverted()
+
+	--I'm sure there's a more elegant way to handle this, but I'm being lazy.
+	--Handle flips by rendering with -1 x scaling
+	if not inverted then
+		love.graphics.draw(canvas, x, y, 0, scaleX, scaleY)
+	else
+		--Need to offset x position due to scaling
+		love.graphics.draw(canvas, x + inversionOffset, y, 0, -scaleX, scaleY)
+	end
+
+	--Turn default back on
+	love.graphics.setBlendMode('alpha')
+
+end --draw
+
+
+
+
 --Load a spriter file and return an object that can be used to animate and render this data
 --NOTE:  the object returned has Spriter set as a metatable reference, so the spriterData returned
 --Essentially "inherits" all of the methods in Spriter
