@@ -95,8 +95,45 @@ Spriter.printTable = printTable
 ----------------------------------------------------------------------------
 
 
+function Spriter:loadTexturePackerData( filename )
+	self.texturePackerFound = true
+
+	local contents, size = love.filesystem.read( filename )
+	assert(size, "Error loading file " .. filename)
+
+	local tpData, pos, err = json.decode(contents, 1, nil)
+	assert( not err, "Parse error!")
+
+	self.textureAtlas = {}
+	self.quads = {}
+
+	local textureFilename = self.path .. "/" .. tpData.meta.image 
+	self.texture = love.graphics.newImage( textureFilename )
+
+	if not self.texture then
+		print("File " .. textureFilename .. " not found")
+	else
+		print("Found " .. textureFilename)
+	end
+	for filename, data in pairs(tpData.frames) do
+		print("Need to load " .. filename)
+	end
+
+	print("GOT IT!")
+end
+
 --Dig through data structure, ensure files exist, load images, and store references within data structure
 function Spriter:loadFilesAndFolders()
+	print("Path is " .. self.path)
+
+	--By convention, we assume that a .json file that matches the directory name is
+	--The output of TexturePacker Spriter export.  If the file exists, load texturepacker atlas
+	--Instead of the individual images
+	local jsonFilename = self.path .. "/" .. self.baseName .. ".json"
+	if love.filesystem.isFile( jsonFilename ) then
+		return self:loadTexturePackerData( jsonFilename )
+	end
+
 	for i = 1, # self.folder do
 
 		local files = self.folder[i].file
@@ -107,7 +144,7 @@ function Spriter:loadFilesAndFolders()
 			local dir, filename, extension = string.match(file.name, "(.-)([^/]-([^%.]+))$")
 			file.filename = filename
 
-			--FIXME COUPLING - store LOVE image reference in image object
+			--Store LOVE image reference in image object
 			local image = love.graphics.newImage( self.path .. "/" .. file.name)
 			assert(image, "nil image!")
 			file.image = image
@@ -1231,8 +1268,15 @@ function Spriter:drawDebugInfo()
 	end
 end --drawDebugInfo
 
+function Spriter:texturePackerDraw( x, y )
+end
 
 function Spriter:draw( x, y )
+	if self.texturePackerFound then
+		self:texturePackerDraw( x, y )
+		return
+	end
+
 	local canvas = self:getCanvas()
 
 	local frameData = self:getFrameData()
@@ -1323,6 +1367,7 @@ end --draw
 function Spriter:loadSpriter( path, directory )
 
 	--All spriter assets are expected to be relative to path/directory
+	self.baseName = directory
 	self.path = path .. "/" .. directory
 
 	--By convention, we will assume filename is animationDirectory/animationDirectory.scon
