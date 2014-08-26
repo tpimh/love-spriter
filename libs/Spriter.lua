@@ -121,7 +121,9 @@ end --loadFilesAndFolders
 function Spriter:updateIds( spriterData )
 	for k, v in pairs( spriterData ) do
 		if k == "id" or k == "parent" or k == "obj" or k == "file" or k == "folder" or k == "key" or k == "timeline" then
-			if type(v) == "number" then
+			--After B10 download, timelineID started getting exported as a string,
+			--so I added the if-string-and-can-be-cast
+			if type(v) == "number" or (type(v) == "string" and tonumber(v)) then
 				spriterData[k] = v + 1
 			end
 		end
@@ -286,7 +288,8 @@ function Spriter:getTimelineKeyById( animationID, timelineID, keyID )
 	--NOTE: hard-coding for 1 entity
 	local animation = self.entity[1].animation[animationID]
 	assert(animation, "Animation " .. tostring(animationID) .. " not found")
-	local timeline = animation.timeline[timelineID]
+	--After B10 download, timelineID started getting exported as a string, so I'm casting it
+	local timeline = animation.timeline[tonumber(timelineID)]
 	assert(timeline, "Timeline " .. tostring(timelineID) .. " not found")
 	local key = timeline.key[keyID]
 	assert(key, "Key " .. tostring(keyID) .. " not found")
