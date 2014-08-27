@@ -105,29 +105,25 @@ function Spriter:loadTexturePackerData( filename )
 	assert( not err, "Parse error!")
 
 	self.textureAtlas = {}
-	self.textureAtlas.quads = {}
+	self.textureAtlas.tiles = {}
 
 	local textureFilename = self.path .. "/" .. tpData.meta.image 
 	self.textureAtlas.texture = love.graphics.newImage( textureFilename )
 
-	if not self.textureAtlas.texture then
-		print("File " .. textureFilename .. " not found")
-	else
-		print("Found " .. textureFilename)
-	end
+	assert(self.textureAtlas.texture, "File " .. textureFilename .. " not found")
+
 	local imageWidth = self.textureAtlas.texture:getWidth()
 	local imageHeight = self.textureAtlas.texture:getHeight()
 
 	for filename, data in pairs(tpData.frames) do
+		local tile = {}
+		tile.filename = filename
+		tile.quad = love.graphics.newQuad(data.frame.x, data.frame.y, data.frame.w, data.frame.h, imageWidth, imageHeight )
+		local x, y, w, h = tile.quad:getViewport()
+		tile.w = w
+		tile.h = h
 
-		self.textureAtlas.quads[filename] = love.graphics.newQuad(data.frame.x, data.frame.y, data.frame.w, data.frame.h, imageWidth, imageHeight )
-		print("Need to load " .. filename)
-	end
-	function self.textureAtlas:getDimensions(quadName)
-		local quad = self.quads[quadName]
-		assert(quad, "Unable to find quad " .. tostring(quadName))
-		local x, y, w, h = quad:getViewport()
-	    return w, h
+		self.textureAtlas.tiles[filename] = tile
 	end
 
 	for i = 1, # self.folder do
@@ -135,20 +131,18 @@ function Spriter:loadTexturePackerData( filename )
 		for j = 1, # files do
 			local file = files[j]
 
-			local quadName = file.name
+			local tileName = file.name
 
-			local quad = self.textureAtlas.quads[quadName]
-			assert(quad, "Unable to find quad " .. tostring(quadName))
+			local tile = self.textureAtlas.tiles[tileName]
+			assert(tile, "Unable to find tile " .. tostring(tileName))
 
-			file.quadName = quadName --For later calls to getDimensions
-			file.quad = quad
+			file.tile = tile
 		end
 	end
 end
 
 --Dig through data structure, ensure files exist, load images, and store references within data structure
 function Spriter:loadFilesAndFolders()
-	print("Path is " .. self.path)
 
 	--By convention, we assume that a .json file that matches the directory name is
 	--The output of TexturePacker Spriter export.  If the file exists, load texturepacker atlas
@@ -873,8 +867,7 @@ function Spriter:buildFrameData()
 		local imageData = {
 			dataType = "image",
 			image = image,
-			quad = file.quad, --Texturepacker load specific
-			quadName = file.quadName, --Texturepacker load specific
+			tile = file.tile, --Texturepacker load specific
 			x = objectRef.x or 0,
 			y = objectRef.y or 0,
 			pivotX = pivotX,
@@ -1339,13 +1332,13 @@ function Spriter:draw( x, y )
 				pivotY = imageData.image:getHeight() - rescale( pivotY, 0, 1, 0, imageData.image:getHeight() )
 				love.graphics.draw(imageData.image, x, y, -imageData.angle, imageData.scale_x, imageData.scale_y, pivotX, pivotY)
 			else
-				assert(imageData.quadName, "No imageData.quadName")
-				local w, h = self.textureAtlas:getDimensions(imageData.quadName)
-				assert(w and h, "Error getting dimensions of " .. tostring(imageData.quadName))
+				assert(imageData.tile, "No imageData.tile")
+				local w, h = imageData.tile.w, imageData.tile.h
+				assert(w and h, "Error getting dimensions of " .. tostring(imageData.tile.fileName))
 				pivotX = rescale( pivotX, 0, 1, 0, w )
 				--Love2D has Y inverted from Spriter behavior -- pivotY is height - pivotY value
 				pivotY = h - rescale( pivotY, 0, 1, 0, h )
-				love.graphics.draw(self.textureAtlas.texture, imageData.quad, x, y, -imageData.angle, imageData.scale_x, imageData.scale_y, pivotX, pivotY)
+				love.graphics.draw(self.textureAtlas.texture, imageData.tile.quad, x, y, -imageData.angle, imageData.scale_x, imageData.scale_y, pivotX, pivotY)
 			end
 		end
 	end
