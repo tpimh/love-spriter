@@ -105,21 +105,45 @@ function Spriter:loadTexturePackerData( filename )
 	assert( not err, "Parse error!")
 
 	self.textureAtlas = {}
-	self.quads = {}
+	self.textureAtlas.quads = {}
 
 	local textureFilename = self.path .. "/" .. tpData.meta.image 
-	self.texture = love.graphics.newImage( textureFilename )
+	self.textureAtlas.texture = love.graphics.newImage( textureFilename )
 
-	if not self.texture then
+	if not self.textureAtlas.texture then
 		print("File " .. textureFilename .. " not found")
 	else
 		print("Found " .. textureFilename)
 	end
+	local imageWidth = self.textureAtlas.texture:getWidth()
+	local imageHeight = self.textureAtlas.texture:getHeight()
+
 	for filename, data in pairs(tpData.frames) do
+
+		self.textureAtlas.quads[filename] = love.graphics.newQuad(data.frame.x, data.frame.y, data.frame.w, data.frame.h, imageWidth, imageHeight )
 		print("Need to load " .. filename)
 	end
+	function self.textureAtlas:getDimensions(quadName)
+		local quad = self.quads[quadName]
+		assert(quad, "Unable to find quad " .. tostring(quadName))
+		local x, y, w, h = quad:getViewport()
+	    return w, h
+	end
 
-	print("GOT IT!")
+	for i = 1, # self.folder do
+		local files = self.folder[i].file
+		for j = 1, # files do
+			local file = files[j]
+
+			local quadName = file.name
+
+			local quad = self.textureAtlas.quads[quadName]
+			assert(quad, "Unable to find quad " .. tostring(quadName))
+
+			file.quadName = quadName --For later calls to getDimensions
+			file.quad = quad
+		end
+	end
 end
 
 --Dig through data structure, ensure files exist, load images, and store references within data structure
@@ -849,6 +873,8 @@ function Spriter:buildFrameData()
 		local imageData = {
 			dataType = "image",
 			image = image,
+			quad = file.quad, --Texturepacker load specific
+			quadName = file.quadName, --Texturepacker load specific
 			x = objectRef.x or 0,
 			y = objectRef.y or 0,
 			pivotX = pivotX,
@@ -1272,11 +1298,6 @@ function Spriter:texturePackerDraw( x, y )
 end
 
 function Spriter:draw( x, y )
-	if self.texturePackerFound then
-		self:texturePackerDraw( x, y )
-		return
-	end
-
 	local canvas = self:getCanvas()
 
 	local frameData = self:getFrameData()
@@ -1310,12 +1331,22 @@ function Spriter:draw( x, y )
 			--Pivot data is stored as 0-1, but actually represents an offset of 0-width or 0-height for rotation purposes
 			local pivotX = imageData.pivotX or 0
 			local pivotY = imageData.pivotY or 1
-			--Rescape pivot data from 0,1 to 0,w/h
-			pivotX = rescale( pivotX, 0, 1, 0, imageData.image:getWidth() )
-			--Love2D has Y inverted from Spriter behavior -- pivotY is height - pivotY value
-			pivotY = imageData.image:getHeight() - rescale( pivotY, 0, 1, 0, imageData.image:getHeight() )
 
-			love.graphics.draw(imageData.image, x, y, -imageData.angle, imageData.scale_x, imageData.scale_y, pivotX, pivotY)
+			if not self.texturePackerFound then
+				--Rescape pivot data from 0,1 to 0,w/h
+				pivotX = rescale( pivotX, 0, 1, 0, imageData.image:getWidth() )
+				--Love2D has Y inverted from Spriter behavior -- pivotY is height - pivotY value
+				pivotY = imageData.image:getHeight() - rescale( pivotY, 0, 1, 0, imageData.image:getHeight() )
+				love.graphics.draw(imageData.image, x, y, -imageData.angle, imageData.scale_x, imageData.scale_y, pivotX, pivotY)
+			else
+				assert(imageData.quadName, "No imageData.quadName")
+				local w, h = self.textureAtlas:getDimensions(imageData.quadName)
+				assert(w and h, "Error getting dimensions of " .. tostring(imageData.quadName))
+				pivotX = rescale( pivotX, 0, 1, 0, w )
+				--Love2D has Y inverted from Spriter behavior -- pivotY is height - pivotY value
+				pivotY = h - rescale( pivotY, 0, 1, 0, h )
+				love.graphics.draw(self.textureAtlas.texture, imageData.quad, x, y, -imageData.angle, imageData.scale_x, imageData.scale_y, pivotX, pivotY)
+			end
 		end
 	end
 
