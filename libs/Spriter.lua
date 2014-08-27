@@ -122,6 +122,11 @@ function Spriter:loadTexturePackerData( filename )
 		local x, y, w, h = tile.quad:getViewport()
 		tile.w = w
 		tile.h = h
+		--[[
+		--Currently unsure of how to handle trimmed source images
+		tile.xOffset = -(data.sourceSize.w - data.frame.w)
+		tile.yOffset = -(data.sourceSize.h - data.frame.h)
+		--]]
 
 		self.textureAtlas.tiles[filename] = tile
 	end
