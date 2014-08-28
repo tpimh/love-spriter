@@ -96,25 +96,32 @@ Spriter.printTable = printTable
 
 
 function Spriter:loadTexturePackerData( filename )
-	self.texturePackerFound = true
+	--For renderer to know how to render
+	self.usingTexturePacker = true
 
+	--Load and decode texturepacker json data
 	local contents, size = love.filesystem.read( filename )
 	assert(size, "Error loading file " .. filename)
-
 	local tpData, pos, err = json.decode(contents, 1, nil)
 	assert( not err, "Parse error!")
 
 	self.textureAtlas = {}
+	--We are calling info about each texture stored in the texturepacker sheet "tiles"
 	self.textureAtlas.tiles = {}
 
+	--Load actual image
 	local textureFilename = self.path .. "/" .. tpData.meta.image 
 	self.textureAtlas.texture = love.graphics.newImage( textureFilename )
-
 	assert(self.textureAtlas.texture, "File " .. textureFilename .. " not found")
+
+	--Initialize spriteBatch for efficient rendering.  Could just render rects, but sprite batches are faster
+	--Should probably compute some sort of sensible value for max sprites...maybe optionally pass it in?
+	self.spriteBatch = love.graphics.newSpriteBatch( self.textureAtlas.texture, 300, "stream" )
 
 	local imageWidth = self.textureAtlas.texture:getWidth()
 	local imageHeight = self.textureAtlas.texture:getHeight()
 
+	--Build love quads from info in parsed json
 	for filename, data in pairs(tpData.frames) do
 		local tile = {}
 		tile.filename = filename
@@ -123,7 +130,7 @@ function Spriter:loadTexturePackerData( filename )
 		tile.w = w
 		tile.h = h
 		--[[
-		--Currently unsure of how to handle trimmed source images
+		--NOTE:  Currently NOT HANDLING trimmed source images!!!
 		tile.xOffset = -(data.sourceSize.w - data.frame.w)
 		tile.yOffset = -(data.sourceSize.h - data.frame.h)
 		--]]
@@ -131,6 +138,7 @@ function Spriter:loadTexturePackerData( filename )
 		self.textureAtlas.tiles[filename] = tile
 	end
 
+	--Update spriterData file data to reference the tiles we have created
 	for i = 1, # self.folder do
 		local files = self.folder[i].file
 		for j = 1, # files do
@@ -144,7 +152,7 @@ function Spriter:loadTexturePackerData( filename )
 			file.tile = tile
 		end
 	end
-end
+end --loadTexturePackerData
 
 --Dig through data structure, ensure files exist, load images, and store references within data structure
 function Spriter:loadFilesAndFolders()
@@ -1219,7 +1227,7 @@ function Spriter:setInverted( inverted )
 	self.inverted = inverted
 end
 
---Debugging function - draw bones.  NOTE:  bones currently not interpolated
+--Debugging function - draw bones. 
 function Spriter:drawDebugInfo()
 	local frameData = self:getFrameData()
 
@@ -1292,11 +1300,14 @@ function Spriter:drawDebugInfo()
 	end
 end --drawDebugInfo
 
-function Spriter:texturePackerDraw( x, y )
-end
-
 function Spriter:draw( x, y )
 	local canvas = self:getCanvas()
+
+	--Only possible to use sprite batch if we used texture packer structure - default is series of disparate images
+	if self.usingTexturePacker then
+		self.spriteBatch:clear()
+		self.spriteBatch:bind()
+	end
 
 	local frameData = self:getFrameData()
 
@@ -1330,7 +1341,7 @@ function Spriter:draw( x, y )
 			local pivotX = imageData.pivotX or 0
 			local pivotY = imageData.pivotY or 1
 
-			if not self.texturePackerFound then
+			if not self.usingTexturePacker then
 				--Rescape pivot data from 0,1 to 0,w/h
 				pivotX = rescale( pivotX, 0, 1, 0, imageData.image:getWidth() )
 				--Love2D has Y inverted from Spriter behavior -- pivotY is height - pivotY value
@@ -1343,9 +1354,16 @@ function Spriter:draw( x, y )
 				pivotX = rescale( pivotX, 0, 1, 0, w )
 				--Love2D has Y inverted from Spriter behavior -- pivotY is height - pivotY value
 				pivotY = h - rescale( pivotY, 0, 1, 0, h )
-				love.graphics.draw(self.textureAtlas.texture, imageData.tile.quad, x, y, -imageData.angle, imageData.scale_x, imageData.scale_y, pivotX, pivotY)
+				--love.graphics.draw(self.textureAtlas.texture, imageData.tile.quad, x, y, -imageData.angle, imageData.scale_x, imageData.scale_y, pivotX, pivotY)
+				self.spriteBatch:add(imageData.tile.quad, x, y, -imageData.angle, imageData.scale_x, imageData.scale_y, pivotX, pivotY)
 			end
 		end
+	end
+
+	--Texturepacker rendering overhead
+	if self.usingTexturePacker then
+		self.spriteBatch:unbind()
+		love.graphics.draw(self.spriteBatch)
 	end
 
 	if self:getDebug() then

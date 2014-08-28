@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>3</int>
         <key>texturePackerVersion</key>
-        <string>3.3.5b1</string>
+        <string>3.4.0</string>
         <key>fileName</key>
         <string>/Users/jmccawley/code/spriter.bitbucket/GreyGuy/GreyGuy.tps</string>
         <key>autoSDSettings</key>
@@ -72,7 +72,7 @@
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
-            <int>4096</int>
+            <int>2048</int>
             <key>height</key>
             <int>4096</int>
         </QSize>
@@ -166,7 +166,7 @@
             <key>trimThreshold</key>
             <uint>1</uint>
             <key>trimMode</key>
-            <enum type="SpriteSettings::TrimMode">Trim</enum>
+            <enum type="SpriteSettings::TrimMode">None</enum>
             <key>heuristicMask</key>
             <false/>
             <key>pivotPoint</key>
