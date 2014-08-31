@@ -549,6 +549,15 @@ function Spriter:pointDistance( x1, y1, x2, y2 )
 end
 
 
+--Created this because the inTransition variable couldn't be used (was false while still in transition). 
+-- I don't remember its internal logic, so I created a method for callers to use.  I can refactor it later if necessary
+function Spriter:isInTransition()
+	if self.transitions and #self.transitions > 0 then
+		return true
+	end
+	return false
+end
+
 --Set the animation referenced by animationName as the current animation
 --Die is animationName is not a valid animation.  
 function Spriter:setCurrentAnimationName( animationName, animationType, inTransition )
@@ -1151,6 +1160,13 @@ function Spriter:getAnimationNames()
 	return animationNames
 end
 
+function Spriter:getCanvasOffset()
+	local offsetX = self.canvasOffsetX or 0
+	local offsetY = self.canvasOffsetY or 0
+
+	return offsetX, offsetY
+end
+
 function Spriter:setCanvasOffset( canvasOffsetX, canvasOffsetY )
 	self.canvasOffsetX = canvasOffsetX
 	self.canvasOffsetY = canvasOffsetY
@@ -1180,7 +1196,7 @@ end
 --Not sure if the best idea, and certainly clunky to hard-code w/h
 function Spriter:getCanvas()
 	if not self.canvas then
-		Spriter.canvas = love.graphics.newCanvas(800, 600)
+		Spriter.canvas = love.graphics.newCanvas(800, 800)
 	end
 	return self.canvas
 end
@@ -1398,6 +1414,13 @@ function Spriter:draw( x, y )
 
 	x = x + xOffset
 	y = y + yOffset
+
+	local canvasOffsetX, canvasOffsetY = self:getCanvasOffset()
+
+	--We offset things in the canvas purely to avoid clipping of the sprite.  If we do so,
+	--We have to un-do the offset prior to rendering the canvas
+	x = x - (canvasOffsetX * scaleX)
+	y = y - (canvasOffsetY * scaleY)
 
 	local inverted = self:getInverted()
 
