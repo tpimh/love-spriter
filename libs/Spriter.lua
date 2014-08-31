@@ -1151,6 +1151,11 @@ function Spriter:getAnimationNames()
 	return animationNames
 end
 
+function Spriter:setCanvasOffset( canvasOffsetX, canvasOffsetY )
+	self.canvasOffsetX = canvasOffsetX
+	self.canvasOffsetY = canvasOffsetY
+end
+
 --Convert spriter coordinates to Love-style coordinates.  
 --0,0 is center of screen positive y moves up from center of screen
 function Spriter:spriterToScreen( x, y )
@@ -1159,6 +1164,13 @@ function Spriter:spriterToScreen( x, y )
 
 	x = centerx + x
 	y = centery - y
+
+       if self.canvasOffsetX then
+               x = x + self.canvasOffsetX
+       end
+       if self.canvasOffsetY then
+               y = y + self.canvasOffsetY
+       end
 
 	return x, y
 end
