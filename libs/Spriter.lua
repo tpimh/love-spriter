@@ -1175,8 +1175,8 @@ end
 --Convert spriter coordinates to Love-style coordinates.  
 --0,0 is center of screen positive y moves up from center of screen
 function Spriter:spriterToScreen( x, y )
-	local centerx = love.graphics:getWidth() / 2
-	local centery = love.graphics:getHeight() -200
+	local centerx = Spriter.canvas:getWidth() / 2
+	local centery = Spriter.canvas:getHeight() -200
 
 	x = centerx + x
 	y = centery - y
