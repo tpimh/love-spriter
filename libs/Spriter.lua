@@ -157,6 +157,10 @@ end --loadTexturePackerData
 --Dig through data structure, ensure files exist, load images, and store references within data structure
 function Spriter:loadFilesAndFolders()
 
+	--Creating a quick reference for retrieving file entries based on filename
+	--Not 100% sure there isn't an easy way to do it already, but I don't see one
+	self.filenameLookup = {}
+
 	--By convention, we assume that a .json file that matches the directory name is
 	--The output of TexturePacker Spriter export.  If the file exists, load texturepacker atlas
 	--Instead of the individual images
@@ -179,6 +183,7 @@ function Spriter:loadFilesAndFolders()
 			local image = love.graphics.newImage( self.path .. "/" .. file.name)
 			assert(image, "nil image!")
 			file.image = image
+			self.filenameLookup[file.name] = file
 		end
 	end
 
@@ -871,7 +876,10 @@ function Spriter:buildFrameData()
 		local key = objectRef.cycKey
 		local object = key.object
 		local file = object.cycFile
-		local image = file.image --Love2D image handle
+
+		local altFile = self:getSwappedImage( file.name )
+
+		local image = altFile.image --Love2D image handle
 
 		--Optionally, images can pivot rotations from a non-standard point (default is bottom right corner {top right in Love coords})
 		local pivotX, pivotY
@@ -1439,7 +1447,29 @@ function Spriter:draw( x, y )
 end --draw
 
 
+--Tell library to render replacementImageName any time there is an attempt to render the image referenced by imageName
+--If nil is passed in for replacementImageName, resets back to original
+function Spriter:swapImage( imageName, replacementImageName )
+	self.imageSwaps[imageName] = replacementImageName
+end
 
+--Based on passed imageName, return the swapped image reference if there is a imageSwap entry for it,
+--Or return the image reference for the passed imageName if not
+function Spriter:getSwappedImage( imageName )
+	local name = imageName
+	
+	if self.imageSwaps[imageName] then
+		name = self.imageSwaps[imageName]
+	end
+	local altFile = self.filenameLookup[name]
+	assert(altFile, "Unable to lookup image " .. tostring(name))
+	return altFile
+end
+
+--Undo all mapping done via calls to swapImage
+function Spriter:resetImageSwaps()
+	self.imageSwaps = {}
+end
 
 --Load a spriter file and return an object that can be used to animate and render this data
 --NOTE:  the object returned has Spriter set as a metatable reference, so the spriterData returned
@@ -1492,6 +1522,8 @@ function Spriter:loadSpriter( path, directory )
 	--NOTE:  this method is deprecated.  My previous approach was incorrect.  I'm leaving this here temporarily in case I need to reference it
 --	spriterData:applyTransformations()
 
+	--Table of image filenames that allows user to swap out images at runtime.  see swapImage
+	spriterData.imageSwaps = {}
 
 	return spriterData
 end --loadSpriter
