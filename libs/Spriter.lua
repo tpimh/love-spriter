@@ -136,6 +136,7 @@ function Spriter:loadTexturePackerData( filename )
 		--]]
 
 		self.textureAtlas.tiles[filename] = tile
+		self.filenameLookup[filename] = tile
 	end
 
 	--Update spriterData file data to reference the tiles we have created
