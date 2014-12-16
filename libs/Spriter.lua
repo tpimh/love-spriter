@@ -1205,7 +1205,7 @@ end
 --Not sure if the best idea, and certainly clunky to hard-code w/h
 function Spriter:getCanvas()
 	if not self.canvas then
-		Spriter.canvas = love.graphics.newCanvas(800, 800)
+		Spriter.canvas = love.graphics.newCanvas(1000, 1000)
 	end
 	return self.canvas
 end
@@ -1525,6 +1525,9 @@ function Spriter:loadSpriter( path, directory )
 
 	--Table of image filenames that allows user to swap out images at runtime.  see swapImage
 	spriterData.imageSwaps = {}
+
+	--Adding this because somehow it was not initialized
+	local canvas = self:getCanvas()
 
 	return spriterData
 end --loadSpriter
