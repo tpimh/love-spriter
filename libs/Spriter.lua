@@ -1343,7 +1343,7 @@ function Spriter:draw( x, y )
 	--Only possible to use sprite batch if we used texture packer structure - default is series of disparate images
 	if self.usingTexturePacker then
 		self.spriteBatch:clear()
-		self.spriteBatch:bind()
+		--self.spriteBatch:bind() --deprecated love 0.10.0 happens automatically
 	end
 
 	local frameData = self:getFrameData()
@@ -1361,7 +1361,8 @@ function Spriter:draw( x, y )
 	--All graphics operations from this point forward render to canvas instead of screen
 	love.graphics.setCanvas(canvas)
 	--Duh
-	canvas:clear()
+	--canvas:clear() --deprecated 0.10.0 need to cal love.graphics.clear
+	love.graphics.clear()
 
 	--I believe this is the default, but in case it's set elsewhere:w
 	love.graphics.setBlendMode('alpha')
@@ -1399,7 +1400,7 @@ function Spriter:draw( x, y )
 
 	--Texturepacker rendering overhead
 	if self.usingTexturePacker then
-		self.spriteBatch:unbind()
+		--self.spriteBatch:unbind() -- removed 0.10.0 should be automatic
 		love.graphics.draw(self.spriteBatch)
 	end
 
@@ -1412,7 +1413,8 @@ function Spriter:draw( x, y )
 
 	-- The rectangle from the Canvas was already alpha blended.
 	-- Use the premultiplied blend mode when drawing the Canvas itself to prevent another blending.
-	love.graphics.setBlendMode('premultiplied')
+    --FIXME turning off just to kill errors
+	--love.graphics.setBlendMode('premultiplied')
 
 	--Return to transformations active prior to our draw
         love.graphics.pop()
