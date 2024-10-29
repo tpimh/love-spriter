@@ -22,6 +22,7 @@ Note: loadSpriter is primary entry point to class.
 --Spriter files are "scml" (xml) or "scon" (json).  We will use the dkjson library to load json "scon" files
 local json = require("libs/dkjson")
 
+--- Love2D BrashMonkey Spriter Library.
 
 local Spriter = {}
 
@@ -95,6 +96,7 @@ Spriter.printTable = printTable
 ----------------------------------------------------------------------------
 
 
+--- Load TexturePacker data.
 function Spriter:loadTexturePackerData( filename )
 	--For renderer to know how to render
 	self.usingTexturePacker = true
@@ -155,6 +157,7 @@ function Spriter:loadTexturePackerData( filename )
 	end
 end --loadTexturePackerData
 
+--- Load files and folders.
 --Dig through data structure, ensure files exist, load images, and store references within data structure
 function Spriter:loadFilesAndFolders()
 
@@ -191,6 +194,7 @@ function Spriter:loadFilesAndFolders()
 	return files, folders
 end --loadFilesAndFolders
 
+--- Update IDs.
 --Recurse through data structure and add 1 to all c-style 0-indexed references so they are Lua-style 1-indexed tables
 function Spriter:updateIds( spriterData )
 	for k, v in pairs( spriterData ) do
@@ -207,6 +211,7 @@ function Spriter:updateIds( spriterData )
 	end
 end --updateIds
 
+--- Angles to radians.
 --Recurse through data structure and convert all angles from degrees to radians
 --Who uses degrees these days?  Sheesh.  Actually, I prefer degrees.  But math libraries don't.  Sad face.
 function Spriter:anglesToRadians( spriterData )
@@ -223,6 +228,7 @@ function Spriter:anglesToRadians( spriterData )
 end --updateIds
 
 
+--- Create key references.
 --Create "next" references in mainline keys so we can easily access the next key from the data structure 
 function Spriter:createKeyReferences()
 	for animationIndex = 1, # self.entity[1].animation do
@@ -240,6 +246,7 @@ function Spriter:createKeyReferences()
 	end
 end --createKeyReferences
 
+--- Update timeline references.
 --Map timeline/key reference pairs within data structure to actual object references
 function Spriter:updateTimelineReferences()
 	--I believe that the only timeline references are in the mainlines of the animations
@@ -280,6 +287,7 @@ function Spriter:updateTimelineReferences()
 	end
 end --updateTimelineReferences
 
+--- Update parent references.
 --Map parent references to actual data structure references 
 --Note: according to Spriter forum, ALL parent references are indices into object_ref
 --Huzzah for documentation!
@@ -312,6 +320,7 @@ function Spriter:updateParentReferences()
 	end
 end --updateParentReferences
 
+--- Update file references.
 --Map file id references to data structure references for the actual file data
 --I made this recursive to match all possible cases, but in retrospect, it looks like only timeline keys have images.
 function Spriter:updateFileReferences( node )
@@ -329,6 +338,7 @@ function Spriter:updateFileReferences( node )
 end --updateFileReferences
 
 
+--- Get folder by index.
 --Get folder by index.  Die if invalid folder index
 --I am assuming that the folder index in the lua array *should* be the same as its id
 --Note:  **I make this assumption globally throughout this parser**
@@ -339,6 +349,7 @@ function Spriter:getFolderByIndex( index )
 end
 
 
+--- Get timeline by ID.
 --Read the name of the function.  This and then next several "get" methods basically dig 
 --Through the data structure for what you're looking for and die if they can't find it
 function Spriter:getTimelineById( animationID, timelineID )
@@ -354,6 +365,7 @@ function Spriter:getTimelineById( animationID, timelineID )
 	return timeline
 end
 
+--- Get timeline key by ID.
 --See comments above
 function Spriter:getTimelineKeyById( animationID, timelineID, keyID )
 	assert(animationID, "animationID has no value")
@@ -371,6 +383,7 @@ function Spriter:getTimelineKeyById( animationID, timelineID, keyID )
 	return key, timeline.name
 end
 
+--- Get bone by name.
 --The timelines refer to bones by name, which doesn't quite match the paradigm of id/index, so
 --We provide this helper function to grab bones by name
 function Spriter:getBoneByName( boneName )
@@ -383,6 +396,7 @@ function Spriter:getBoneByName( boneName )
 	assert(false, "Bone '" .. tostring(boneName) .. "' not found")
 end
 
+--- Get bone reference by ID.
 --See comments above
 function Spriter:getBoneRefById( animationID, keyID, boneRefID )
 	assert(animationID, "animationID has no value")
@@ -402,6 +416,7 @@ function Spriter:getBoneRefById( animationID, keyID, boneRefID )
 end
 
 
+--- Get file by ID.
 --See comments above
 function Spriter:getFileById( folderID, fileID )
 
@@ -413,6 +428,7 @@ function Spriter:getFileById( folderID, fileID )
 	return file
 end
 
+--- Get animation by name.
 --The actual user code will most likely (sanely) use animation names rather than indices into the array
 --This method is for them
 function Spriter:getAnimationByName( animationName )
@@ -426,6 +442,7 @@ function Spriter:getAnimationByName( animationName )
 	assert(false, "Unable to find animation '" .. tostring(animationName) .. "'")
 end --animationName
 
+--- Apply transformations.
 --Apply all timeline transformations to heirarchy - no need to compute every frame
 --NOTE:  this method is deprecated.  My previous approach was incorrect.  I'm leaving this here temporarily in case I need to reference it
 function Spriter:applyTransformations()
@@ -516,6 +533,7 @@ function Spriter:applyTransformations()
 
 end
 
+--- Rotate point.
 --Helper function: rotate point px, py around center cx,cy.  If cx, cy not passed, rotate around origin
 --FUNCTION EXPECTS RADIANS
 function Spriter:rotatePoint( px, py, angle, cx, cy )
@@ -546,6 +564,7 @@ function Spriter:rotatePoint( px, py, angle, cx, cy )
 	return px, py
 end --rotatePoint
 
+--- Point distance.
 --For debugging - distance between two points
 function Spriter:pointDistance( x1, y1, x2, y2 )
 	local xd = x2-x1
@@ -555,6 +574,7 @@ function Spriter:pointDistance( x1, y1, x2, y2 )
 end
 
 
+--- Is in transition.
 --Created this because the inTransition variable couldn't be used (was false while still in transition). 
 -- I don't remember its internal logic, so I created a method for callers to use.  I can refactor it later if necessary
 function Spriter:isInTransition()
@@ -564,6 +584,7 @@ function Spriter:isInTransition()
 	return false
 end
 
+--- Set current animation name.
 --Set the animation referenced by animationName as the current animation
 --Die is animationName is not a valid animation.  
 function Spriter:setCurrentAnimationName( animationName, animationType, inTransition )
@@ -583,25 +604,31 @@ function Spriter:setCurrentAnimationName( animationName, animationType, inTransi
 	assert(animation, "Animation " .. tostring(animationName) .. " not found")
 	self.animationName = animationName
 end
+--- Get current animation name.
 function Spriter:getCurrentAnimationName()
 	return self.animationName 
 end
 
+--- Set interpolation.
 function Spriter:setInterpolation( interpolation )
 	self.interpolation = interpolation
 end
+--- Get interpolation.
 function Spriter:getInterpolation()
 	return self.interpolation
 end
 
+--- Start.
 function Spriter:start()
 	self.stopped = nil
 end
 
+--- Stop.
 function Spriter:stop()
 	self.stopped = true
 end
 
+--- Get current animation.
 --Get a reference to the current animation
 function Spriter:getCurrentAnimation()
 	local animationName = self.animationName
@@ -612,6 +639,7 @@ function Spriter:getCurrentAnimation()
 	return animation
 end
 
+--- Get current mainline key.
 --Get a reference to the current mainline key, chosed based on dt updates and current animation value
 function Spriter:getCurrentMainlineKey()
 	local animation = self:getCurrentAnimation()
@@ -643,11 +671,13 @@ function Spriter:getCurrentMainlineKey()
 	return currentKey, currentKeyIndex
 end
 
+--- Rescale.
 --Rescale time elapsed vs duration to min1, max1 (x, y angle, or whatever)
 local function rescale( val, min0, max0, min1, max1 )
 	return (((val - min0) / (max0 - min0)) * (max1 - min1)) + min1
 end
 
+--- Get bone endpoint.
 --Given a bone at position x,y pointing at angle angle with length length, return the x, y of the other end of the bone
 function Spriter:getBoneEndpoint( x, y, angle, length )
 	local x2, y2 = x, y
@@ -663,6 +693,7 @@ function Spriter:getBoneEndpoint( x, y, angle, length )
 	return x2, y2
 end --getBoneEndpoint
 
+--- Lerp angle.
 --Special interpolation function for angles.  Need to be smart enough to "loop" around the 0 degree mark to
 --Find nearby angles rather than take the long way around.  i.e. rotating from 10 degrees to 350 degrees should
 --Go DOWN from 10 to 0, then down 360 to 350.  NOT a linear interpolation from 10 and increasing to 350
@@ -698,6 +729,7 @@ local function lerpAngle( a1, a2, amount )
 end --lerpAngle
 
 
+--- Get next object reference.
 --object_ref indices are not necessarily consistent among keyframes.  Nor are the images that the "actual"
 --object references (they can be swapped out).  The only reliable way I was able to see if two object refs on
 --Separate keyframes were the same "object" was to compare the timeline value.  id is just its position in the array, so it's useless
@@ -718,6 +750,7 @@ local function getNextObjectRef( objectRef, objectRefIndex, nextKey )
 end --getNextObjectRef
 
 
+--- Build frame data.
 --Build one frame of data that is the current "state" of the rig, with interpolation behaviors
 --Defined for the next timeline key
 function Spriter:buildFrameData()
@@ -1009,6 +1042,7 @@ function Spriter:buildFrameData()
 	return frameData
 end --buildFrameData
 
+--- Get frame data.
 --Get current frame data, or build it if it does not exist
 function Spriter:getFrameData()
 	if self.stopped and self.lastFrameData then
@@ -1039,6 +1073,7 @@ function Spriter:getFrameData()
 	return frameData
 end --getFrameData
 
+--- Get time.
 function Spriter:getTime()
 	if not self.time then
 		self.time = 0
@@ -1046,17 +1081,20 @@ function Spriter:getTime()
 	return self.time
 end
 
+--- Set time.
 function Spriter:setTime( time )
 	self.time = time
 end
 
 
+--- Push transition.
 --Push a transition onto the stack (first in, first out)
 --Transitions are animations that we wish to switch to after the current animation finishes
 function Spriter:pushTransition( transition )
 	self.transitions[ # self.transitions + 1 ] = transition
 end
 
+--- Update transition.
 function Spriter:updateTransition()
 	if # self.transitions > 0 then
 		local transition = self.transitions[1]
@@ -1072,26 +1110,31 @@ function Spriter:updateTransition()
 	end
 end
 
+--- Animation looped.
 --Do nothing by default - intended for "inheriting" class to react
 function Spriter:animationLooped()
 	self:updateTransition()
 end
 
+--- Animation stopped.
 --Do nothing by default - intended for "inheriting" class to react
 function Spriter:animationStopped()
 	self:updateTransition()
 end
 
+--- Animation started.
 --Do nothing by default - intended for "inheriting" class to react
 function Spriter:animationStarted()
 
 end
 
+--- Key changed.
 --Do nothing by default - intended for "inheriting" class to react
 function Spriter:keyChanged( keyIndex )
 
 end
 
+--- Increment time.
 --Add delta time to the current time tracking.  Figure out if our animation stopped or looped and notify listeners
 function Spriter:incrementTime( dt )
 	local time = self:getTime()
@@ -1135,6 +1178,7 @@ function Spriter:incrementTime( dt )
 	self:setTime( time )
 end
 
+--- Update.
 --Called once per Love2D "tick."  dt is a delta of time elapsed since last update call.  dt is a float - Number of seconds elapsed
 function Spriter:update( dt )
 	--Allow user to "freeze" animation
@@ -1158,6 +1202,7 @@ function Spriter:update( dt )
 	self:incrementTime( dt )
 end --getFrameData
 
+--- Get animation names.
 --Get list of animation names we can use with setCurrentAnimationName
 function Spriter:getAnimationNames()
 	local animationNames = {}
@@ -1169,6 +1214,7 @@ function Spriter:getAnimationNames()
 	return animationNames
 end
 
+--- Get canvas offset.
 function Spriter:getCanvasOffset()
 	local offsetX = self.canvasOffsetX or 0
 	local offsetY = self.canvasOffsetY or 0
@@ -1176,11 +1222,13 @@ function Spriter:getCanvasOffset()
 	return offsetX, offsetY
 end
 
+--- Set canvas offset.
 function Spriter:setCanvasOffset( canvasOffsetX, canvasOffsetY )
 	self.canvasOffsetX = canvasOffsetX
 	self.canvasOffsetY = canvasOffsetY
 end
 
+--- Spriter to screen.
 --Convert spriter coordinates to Love-style coordinates.  
 --0,0 is center of screen positive y moves up from center of screen
 function Spriter:spriterToScreen( x, y )
@@ -1201,6 +1249,7 @@ function Spriter:spriterToScreen( x, y )
 end
 
 
+--- Get canvas.
 --Using a shared canvas to avoid creating too many
 --Not sure if the best idea, and certainly clunky to hard-code w/h
 function Spriter:getCanvas()
@@ -1210,12 +1259,14 @@ function Spriter:getCanvas()
 	return self.canvas
 end
 
+--- Set offset.
 --Offset at which to render the spriter data.  
 function Spriter:setOffset( offsetX, offsetY)
 	self.offsetX = offsetX
 	self.offsetY = offsetY
 end
 
+--- Get offset.
 function Spriter:getOffset()
 	local offsetX = self.offsetX or 0
 	local offsetY = self.offsetY or 0
@@ -1223,12 +1274,14 @@ function Spriter:getOffset()
 	return offsetX, offsetY
 end
 
+--- Set scale.
 --Scale at which to render the spriter data
 function Spriter:setScale( scaleX, scaleY )
 	self.scaleX = scaleX
 	self.scaleY = scaleY
 end
 
+--- Get scale.
 function Spriter:getScale()
 	local scaleX = self.scaleX or 1
 	local scaleY = self.scaleY or 1
@@ -1236,34 +1289,41 @@ function Spriter:getScale()
 	return scaleX, scaleY
 end
 
+--- Set inversion offset.
 --When inverting the animation, it is usually necessary to render with a corresponding offset
 --This controls the offset used when rendering inverted
 function Spriter:setInversionOffset( inversionOffset )
 	self.inversionOffset = inversionOffset
 end
 
+--- Get inversion offset.
 function Spriter:getInversionOffset()
 	local inversionOffset = self.inversionOffset or 0
 
 	return inversionOffset
 end
 
+--- Set debug.
 --Determines whether we are rendering the bones or not
 function Spriter:setDebug( debug )
 	self.debug = debug
 end
+--- Get debug.
 function Spriter:getDebug()
 	return self.debug
 end
 
+--- Set inverted.
 --If true, we render the spriter data inverted
 function Spriter:getInverted()
 	return self.inverted
 end
+--- Get inverted.
 function Spriter:setInverted( inverted )
 	self.inverted = inverted
 end
 
+--- Draw debug info.
 --Debugging function - draw bones. 
 function Spriter:drawDebugInfo()
 	local frameData = self:getFrameData()
@@ -1336,6 +1396,8 @@ function Spriter:drawDebugInfo()
 	end
 end --drawDebugInfo
 
+
+--- Draw.
 function Spriter:draw( x, y )
 	local canvas = self:getCanvas()
 	local originalCanvas = love.graphics.getCanvas()
@@ -1446,12 +1508,14 @@ function Spriter:draw( x, y )
 end --draw
 
 
+--- Swap image.
 --Tell library to render replacementImageName any time there is an attempt to render the image referenced by imageName
 --If nil is passed in for replacementImageName, resets back to original
 function Spriter:swapImage( imageName, replacementImageName )
 	self.imageSwaps[imageName] = replacementImageName
 end
 
+--- Get swapped image.
 --Based on passed imageName, return the swapped image reference if there is a imageSwap entry for it,
 --Or return the image reference for the passed imageName if not
 function Spriter:getSwappedImage( imageName )
@@ -1465,11 +1529,13 @@ function Spriter:getSwappedImage( imageName )
 	return altFile
 end
 
+--- Reset image swaps.
 --Undo all mapping done via calls to swapImage
 function Spriter:resetImageSwaps()
 	self.imageSwaps = {}
 end
 
+--- Load Spriter.
 --Load a spriter file and return an object that can be used to animate and render this data
 --NOTE:  the object returned has Spriter set as a metatable reference, so the spriterData returned
 --Essentially "inherits" all of the methods in Spriter
