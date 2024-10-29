@@ -1270,10 +1270,10 @@ function Spriter:drawDebugInfo()
 
 	local currentColor = 1
 	local colors = {
-		{r=255,g=0,b=0},
-		{r=0,g=255,b=0},
-		{r=0,g=0,b=255},
-		{r=255,g=255,b=0},
+		{r=1,g=0,b=0},
+		{r=0,g=1,b=0},
+		{r=0,g=0,b=1},
+		{r=1,g=1,b=0},
 	}
 
 	local testImage 
@@ -1306,8 +1306,7 @@ function Spriter:drawDebugInfo()
 					end
 					love.graphics.circle( "fill", tlx, tly, 3, 100 )
 				end
-				love.graphics.setColor(255, 255, 255)
-				love.graphics.setColor(255, 255, 255)
+				love.graphics.setColor(1, 1, 1)
 			end
 		end
 	end --spew
@@ -1331,7 +1330,7 @@ function Spriter:drawDebugInfo()
 
 			love.graphics.circle( "fill", x2, y2, 3, 100 )
 			love.graphics.line(startx,starty, x2,y2)
-			love.graphics.setColor(255, 255, 255)
+			love.graphics.setColor(1, 1, 1)
 			love.graphics.circle( "fill", startx, starty, 5, 100 )
 		end
 	end
@@ -1372,7 +1371,7 @@ function Spriter:draw( x, y )
 		if imageData.dataType == "image" then
 			local x, y = self:spriterToScreen( imageData.x, imageData.y ) 
 
-			love.graphics.setColor(255, 255, 255)
+			love.graphics.setColor(1, 1, 1)
 
 			--Pivot data is stored as 0-1, but actually represents an offset of 0-width or 0-height for rotation purposes
 			local pivotX = imageData.pivotX or 0
