@@ -1,0 +1,1506 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><strong>Spriter</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Spriter</code></h1>
+<p>Love2D BrashMonkey Spriter Library.</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#loadTexturePackerData">loadTexturePackerData (filename)</a></td>
+	<td class="summary">Load TexturePacker data.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#loadFilesAndFolders">loadFilesAndFolders ()</a></td>
+	<td class="summary">Load files and folders.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#updateIds">updateIds (spriterData)</a></td>
+	<td class="summary">Update IDs.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#anglesToRadians">anglesToRadians (spriterData)</a></td>
+	<td class="summary">Angles to radians.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#createKeyReferences">createKeyReferences ()</a></td>
+	<td class="summary">Create key references.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#updateTimelineReferences">updateTimelineReferences ()</a></td>
+	<td class="summary">Update timeline references.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#updateParentReferences">updateParentReferences ()</a></td>
+	<td class="summary">Update parent references.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#updateFileReferences">updateFileReferences (node)</a></td>
+	<td class="summary">Update file references.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getFolderByIndex">getFolderByIndex (index)</a></td>
+	<td class="summary">Get folder by index.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getTimelineById">getTimelineById (animationID, timelineID)</a></td>
+	<td class="summary">Get timeline by ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getTimelineKeyById">getTimelineKeyById (animationID, timelineID, keyID)</a></td>
+	<td class="summary">Get timeline key by ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getBoneByName">getBoneByName (boneName)</a></td>
+	<td class="summary">Get bone by name.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getBoneRefById">getBoneRefById (animationID, keyID, boneRefID)</a></td>
+	<td class="summary">Get bone reference by ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getFileById">getFileById (folderID, fileID)</a></td>
+	<td class="summary">Get file by ID.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAnimationByName">getAnimationByName (animationName)</a></td>
+	<td class="summary">Get animation by name.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#applyTransformations">applyTransformations ()</a></td>
+	<td class="summary">Apply transformations.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#rotatePoint">rotatePoint (px, py, angle, cx, cy)</a></td>
+	<td class="summary">Rotate point.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#pointDistance">pointDistance (x1, y1, x2, y2)</a></td>
+	<td class="summary">Point distance.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#isInTransition">isInTransition ()</a></td>
+	<td class="summary">Is in transition.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setCurrentAnimationName">setCurrentAnimationName (animationName, animationType, inTransition)</a></td>
+	<td class="summary">Set current animation name.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCurrentAnimationName">getCurrentAnimationName ()</a></td>
+	<td class="summary">Get current animation name.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setInterpolation">setInterpolation (interpolation)</a></td>
+	<td class="summary">Set interpolation.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getInterpolation">getInterpolation ()</a></td>
+	<td class="summary">Get interpolation.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#start">start ()</a></td>
+	<td class="summary">Start.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#stop">stop ()</a></td>
+	<td class="summary">Stop.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCurrentAnimation">getCurrentAnimation ()</a></td>
+	<td class="summary">Get current animation.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCurrentMainlineKey">getCurrentMainlineKey ()</a></td>
+	<td class="summary">Get current mainline key.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getBoneEndpoint">getBoneEndpoint (x, y, angle, length)</a></td>
+	<td class="summary">Get bone endpoint.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#buildFrameData">buildFrameData ()</a></td>
+	<td class="summary">Build frame data.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getFrameData">getFrameData ()</a></td>
+	<td class="summary">Get frame data.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getTime">getTime ()</a></td>
+	<td class="summary">Get time.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setTime">setTime (time)</a></td>
+	<td class="summary">Set time.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#pushTransition">pushTransition (transition)</a></td>
+	<td class="summary">Push transition.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#updateTransition">updateTransition ()</a></td>
+	<td class="summary">Update transition.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#animationLooped">animationLooped ()</a></td>
+	<td class="summary">Animation looped.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#animationStopped">animationStopped ()</a></td>
+	<td class="summary">Animation stopped.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#animationStarted">animationStarted ()</a></td>
+	<td class="summary">Animation started.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#keyChanged">keyChanged (keyIndex)</a></td>
+	<td class="summary">Key changed.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#incrementTime">incrementTime (dt)</a></td>
+	<td class="summary">Increment time.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#update">update (dt)</a></td>
+	<td class="summary">Update.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getAnimationNames">getAnimationNames ()</a></td>
+	<td class="summary">Get animation names.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCanvasOffset">getCanvasOffset ()</a></td>
+	<td class="summary">Get canvas offset.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setCanvasOffset">setCanvasOffset (canvasOffsetX, canvasOffsetY)</a></td>
+	<td class="summary">Set canvas offset.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#spriterToScreen">spriterToScreen (x, y)</a></td>
+	<td class="summary">Spriter to screen.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getCanvas">getCanvas ()</a></td>
+	<td class="summary">Get canvas.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setOffset">setOffset (offsetX, offsetY)</a></td>
+	<td class="summary">Set offset.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getOffset">getOffset ()</a></td>
+	<td class="summary">Get offset.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setScale">setScale (scaleX, scaleY)</a></td>
+	<td class="summary">Set scale.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getScale">getScale ()</a></td>
+	<td class="summary">Get scale.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setInversionOffset">setInversionOffset (inversionOffset)</a></td>
+	<td class="summary">Set inversion offset.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getInversionOffset">getInversionOffset ()</a></td>
+	<td class="summary">Get inversion offset.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setDebug">setDebug (debug)</a></td>
+	<td class="summary">Set debug.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getDebug">getDebug ()</a></td>
+	<td class="summary">Get debug.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getInverted">getInverted ()</a></td>
+	<td class="summary">Set inverted.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setInverted">setInverted (inverted)</a></td>
+	<td class="summary">Get inverted.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#drawDebugInfo">drawDebugInfo ()</a></td>
+	<td class="summary">Draw debug info.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#draw">draw (x, y)</a></td>
+	<td class="summary">Draw.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#swapImage">swapImage (imageName, replacementImageName)</a></td>
+	<td class="summary">Swap image.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getSwappedImage">getSwappedImage (imageName)</a></td>
+	<td class="summary">Get swapped image.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#resetImageSwaps">resetImageSwaps ()</a></td>
+	<td class="summary">Reset image swaps.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#loadSpriter">loadSpriter (path, directory)</a></td>
+	<td class="summary">Load Spriter.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "loadTexturePackerData"></a>
+    <strong>loadTexturePackerData (filename)</strong>
+    </dt>
+    <dd>
+    Load TexturePacker data.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">filename</span>
+        For renderer to know how to render
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "loadFilesAndFolders"></a>
+    <strong>loadFilesAndFolders ()</strong>
+    </dt>
+    <dd>
+    Load files and folders.
+Dig through data structure, ensure files exist, load images, and store references within data structure
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "updateIds"></a>
+    <strong>updateIds (spriterData)</strong>
+    </dt>
+    <dd>
+    Update IDs.
+Recurse through data structure and add 1 to all c-style 0-indexed references so they are Lua-style 1-indexed tables
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">spriterData</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "anglesToRadians"></a>
+    <strong>anglesToRadians (spriterData)</strong>
+    </dt>
+    <dd>
+    Angles to radians.
+Recurse through data structure and convert all angles from degrees to radians
+Who uses degrees these days?  Sheesh.  Actually, I prefer degrees.  But math libraries don't.  Sad face.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">spriterData</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "createKeyReferences"></a>
+    <strong>createKeyReferences ()</strong>
+    </dt>
+    <dd>
+    Create key references.
+Create "next" references in mainline keys so we can easily access the next key from the data structure
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "updateTimelineReferences"></a>
+    <strong>updateTimelineReferences ()</strong>
+    </dt>
+    <dd>
+    Update timeline references.
+Map timeline/key reference pairs within data structure to actual object references
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "updateParentReferences"></a>
+    <strong>updateParentReferences ()</strong>
+    </dt>
+    <dd>
+    Update parent references.
+Map parent references to actual data structure references
+Note: according to Spriter forum, ALL parent references are indices into object_ref
+Huzzah for documentation!
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "updateFileReferences"></a>
+    <strong>updateFileReferences (node)</strong>
+    </dt>
+    <dd>
+    Update file references.
+Map file id references to data structure references for the actual file data
+I made this recursive to match all possible cases, but in retrospect, it looks like only timeline keys have images.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">node</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getFolderByIndex"></a>
+    <strong>getFolderByIndex (index)</strong>
+    </dt>
+    <dd>
+    Get folder by index.
+Get folder by index.  Die if invalid folder index
+I am assuming that the folder index in the lua array *should* be the same as its id
+Note:  **I make this assumption globally throughout this parser**
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">index</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getTimelineById"></a>
+    <strong>getTimelineById (animationID, timelineID)</strong>
+    </dt>
+    <dd>
+    Get timeline by ID.
+Read the name of the function.  This and then next several "get" methods basically dig
+Through the data structure for what you're looking for and die if they can't find it
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">animationID</span>
+
+        </li>
+        <li><span class="parameter">timelineID</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getTimelineKeyById"></a>
+    <strong>getTimelineKeyById (animationID, timelineID, keyID)</strong>
+    </dt>
+    <dd>
+    Get timeline key by ID.
+See comments above
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">animationID</span>
+
+        </li>
+        <li><span class="parameter">timelineID</span>
+
+        </li>
+        <li><span class="parameter">keyID</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getBoneByName"></a>
+    <strong>getBoneByName (boneName)</strong>
+    </dt>
+    <dd>
+    Get bone by name.
+The timelines refer to bones by name, which doesn't quite match the paradigm of id/index, so
+We provide this helper function to grab bones by name
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">boneName</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getBoneRefById"></a>
+    <strong>getBoneRefById (animationID, keyID, boneRefID)</strong>
+    </dt>
+    <dd>
+    Get bone reference by ID.
+See comments above
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">animationID</span>
+
+        </li>
+        <li><span class="parameter">keyID</span>
+
+        </li>
+        <li><span class="parameter">boneRefID</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getFileById"></a>
+    <strong>getFileById (folderID, fileID)</strong>
+    </dt>
+    <dd>
+    Get file by ID.
+See comments above
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">folderID</span>
+
+        </li>
+        <li><span class="parameter">fileID</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAnimationByName"></a>
+    <strong>getAnimationByName (animationName)</strong>
+    </dt>
+    <dd>
+    Get animation by name.
+The actual user code will most likely (sanely) use animation names rather than indices into the array
+This method is for them
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">animationName</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "applyTransformations"></a>
+    <strong>applyTransformations ()</strong>
+    </dt>
+    <dd>
+    Apply transformations.
+Apply all timeline transformations to heirarchy - no need to compute every frame
+NOTE:  this method is deprecated.  My previous approach was incorrect.  I'm leaving this here temporarily in case I need to reference it
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "rotatePoint"></a>
+    <strong>rotatePoint (px, py, angle, cx, cy)</strong>
+    </dt>
+    <dd>
+    Rotate point.
+Helper function: rotate point px, py around center cx,cy.  If cx, cy not passed, rotate around origin
+FUNCTION EXPECTS RADIANS
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">px</span>
+
+        </li>
+        <li><span class="parameter">py</span>
+
+        </li>
+        <li><span class="parameter">angle</span>
+
+        </li>
+        <li><span class="parameter">cx</span>
+
+        </li>
+        <li><span class="parameter">cy</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "pointDistance"></a>
+    <strong>pointDistance (x1, y1, x2, y2)</strong>
+    </dt>
+    <dd>
+    Point distance.
+For debugging - distance between two points
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x1</span>
+
+        </li>
+        <li><span class="parameter">y1</span>
+
+        </li>
+        <li><span class="parameter">x2</span>
+
+        </li>
+        <li><span class="parameter">y2</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "isInTransition"></a>
+    <strong>isInTransition ()</strong>
+    </dt>
+    <dd>
+    Is in transition.
+Created this because the inTransition variable couldn't be used (was false while still in transition).
+ I don't remember its internal logic, so I created a method for callers to use.  I can refactor it later if necessary
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setCurrentAnimationName"></a>
+    <strong>setCurrentAnimationName (animationName, animationType, inTransition)</strong>
+    </dt>
+    <dd>
+    Set current animation name.
+Set the animation referenced by animationName as the current animation
+Die is animationName is not a valid animation.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">animationName</span>
+
+        </li>
+        <li><span class="parameter">animationType</span>
+
+        </li>
+        <li><span class="parameter">inTransition</span>
+        Unless this animation change was initiated by a transition, override any existing transitions
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCurrentAnimationName"></a>
+    <strong>getCurrentAnimationName ()</strong>
+    </dt>
+    <dd>
+    Get current animation name.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setInterpolation"></a>
+    <strong>setInterpolation (interpolation)</strong>
+    </dt>
+    <dd>
+    Set interpolation.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">interpolation</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getInterpolation"></a>
+    <strong>getInterpolation ()</strong>
+    </dt>
+    <dd>
+    Get interpolation.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "start"></a>
+    <strong>start ()</strong>
+    </dt>
+    <dd>
+    Start.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "stop"></a>
+    <strong>stop ()</strong>
+    </dt>
+    <dd>
+    Stop.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCurrentAnimation"></a>
+    <strong>getCurrentAnimation ()</strong>
+    </dt>
+    <dd>
+    Get current animation.
+Get a reference to the current animation
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCurrentMainlineKey"></a>
+    <strong>getCurrentMainlineKey ()</strong>
+    </dt>
+    <dd>
+    Get current mainline key.
+Get a reference to the current mainline key, chosed based on dt updates and current animation value
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getBoneEndpoint"></a>
+    <strong>getBoneEndpoint (x, y, angle, length)</strong>
+    </dt>
+    <dd>
+    Get bone endpoint.
+Given a bone at position x,y pointing at angle angle with length length, return the x, y of the other end of the bone
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+
+        </li>
+        <li><span class="parameter">y</span>
+
+        </li>
+        <li><span class="parameter">angle</span>
+
+        </li>
+        <li><span class="parameter">length</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "buildFrameData"></a>
+    <strong>buildFrameData ()</strong>
+    </dt>
+    <dd>
+    Build frame data.
+Build one frame of data that is the current "state" of the rig, with interpolation behaviors
+Defined for the next timeline key
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getFrameData"></a>
+    <strong>getFrameData ()</strong>
+    </dt>
+    <dd>
+    Get frame data.
+Get current frame data, or build it if it does not exist
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getTime"></a>
+    <strong>getTime ()</strong>
+    </dt>
+    <dd>
+    Get time.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setTime"></a>
+    <strong>setTime (time)</strong>
+    </dt>
+    <dd>
+    Set time.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">time</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "pushTransition"></a>
+    <strong>pushTransition (transition)</strong>
+    </dt>
+    <dd>
+    Push transition.
+Push a transition onto the stack (first in, first out)
+Transitions are animations that we wish to switch to after the current animation finishes
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">transition</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "updateTransition"></a>
+    <strong>updateTransition ()</strong>
+    </dt>
+    <dd>
+    Update transition.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "animationLooped"></a>
+    <strong>animationLooped ()</strong>
+    </dt>
+    <dd>
+    Animation looped.
+Do nothing by default - intended for "inheriting" class to react
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "animationStopped"></a>
+    <strong>animationStopped ()</strong>
+    </dt>
+    <dd>
+    Animation stopped.
+Do nothing by default - intended for "inheriting" class to react
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "animationStarted"></a>
+    <strong>animationStarted ()</strong>
+    </dt>
+    <dd>
+    Animation started.
+Do nothing by default - intended for "inheriting" class to react
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "keyChanged"></a>
+    <strong>keyChanged (keyIndex)</strong>
+    </dt>
+    <dd>
+    Key changed.
+Do nothing by default - intended for "inheriting" class to react
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">keyIndex</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "incrementTime"></a>
+    <strong>incrementTime (dt)</strong>
+    </dt>
+    <dd>
+    Increment time.
+Add delta time to the current time tracking.  Figure out if our animation stopped or looped and notify listeners
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">dt</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "update"></a>
+    <strong>update (dt)</strong>
+    </dt>
+    <dd>
+    Update.
+Called once per Love2D "tick."  dt is a delta of time elapsed since last update call.  dt is a float - Number of seconds elapsed
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">dt</span>
+        Allow user to "freeze" animation
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getAnimationNames"></a>
+    <strong>getAnimationNames ()</strong>
+    </dt>
+    <dd>
+    Get animation names.
+Get list of animation names we can use with setCurrentAnimationName
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCanvasOffset"></a>
+    <strong>getCanvasOffset ()</strong>
+    </dt>
+    <dd>
+    Get canvas offset.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setCanvasOffset"></a>
+    <strong>setCanvasOffset (canvasOffsetX, canvasOffsetY)</strong>
+    </dt>
+    <dd>
+    Set canvas offset.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">canvasOffsetX</span>
+
+        </li>
+        <li><span class="parameter">canvasOffsetY</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "spriterToScreen"></a>
+    <strong>spriterToScreen (x, y)</strong>
+    </dt>
+    <dd>
+    Spriter to screen.
+Convert spriter coordinates to Love-style coordinates.
+0,0 is center of screen positive y moves up from center of screen
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+
+        </li>
+        <li><span class="parameter">y</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getCanvas"></a>
+    <strong>getCanvas ()</strong>
+    </dt>
+    <dd>
+    Get canvas.
+Using a shared canvas to avoid creating too many
+Not sure if the best idea, and certainly clunky to hard-code w/h
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setOffset"></a>
+    <strong>setOffset (offsetX, offsetY)</strong>
+    </dt>
+    <dd>
+    Set offset.
+Offset at which to render the spriter data.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">offsetX</span>
+
+        </li>
+        <li><span class="parameter">offsetY</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getOffset"></a>
+    <strong>getOffset ()</strong>
+    </dt>
+    <dd>
+    Get offset.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setScale"></a>
+    <strong>setScale (scaleX, scaleY)</strong>
+    </dt>
+    <dd>
+    Set scale.
+Scale at which to render the spriter data
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">scaleX</span>
+
+        </li>
+        <li><span class="parameter">scaleY</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getScale"></a>
+    <strong>getScale ()</strong>
+    </dt>
+    <dd>
+    Get scale.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setInversionOffset"></a>
+    <strong>setInversionOffset (inversionOffset)</strong>
+    </dt>
+    <dd>
+    Set inversion offset.
+When inverting the animation, it is usually necessary to render with a corresponding offset
+This controls the offset used when rendering inverted
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">inversionOffset</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getInversionOffset"></a>
+    <strong>getInversionOffset ()</strong>
+    </dt>
+    <dd>
+    Get inversion offset.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setDebug"></a>
+    <strong>setDebug (debug)</strong>
+    </dt>
+    <dd>
+    Set debug.
+Determines whether we are rendering the bones or not
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">debug</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getDebug"></a>
+    <strong>getDebug ()</strong>
+    </dt>
+    <dd>
+    Get debug.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getInverted"></a>
+    <strong>getInverted ()</strong>
+    </dt>
+    <dd>
+    Set inverted.
+If true, we render the spriter data inverted
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setInverted"></a>
+    <strong>setInverted (inverted)</strong>
+    </dt>
+    <dd>
+    Get inverted.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">inverted</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "drawDebugInfo"></a>
+    <strong>drawDebugInfo ()</strong>
+    </dt>
+    <dd>
+    Draw debug info.
+Debugging function - draw bones.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "draw"></a>
+    <strong>draw (x, y)</strong>
+    </dt>
+    <dd>
+    Draw.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+
+        </li>
+        <li><span class="parameter">y</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "swapImage"></a>
+    <strong>swapImage (imageName, replacementImageName)</strong>
+    </dt>
+    <dd>
+    Swap image.
+Tell library to render replacementImageName any time there is an attempt to render the image referenced by imageName
+If nil is passed in for replacementImageName, resets back to original
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">imageName</span>
+
+        </li>
+        <li><span class="parameter">replacementImageName</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getSwappedImage"></a>
+    <strong>getSwappedImage (imageName)</strong>
+    </dt>
+    <dd>
+    Get swapped image.
+Based on passed imageName, return the swapped image reference if there is a imageSwap entry for it,
+Or return the image reference for the passed imageName if not
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">imageName</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "resetImageSwaps"></a>
+    <strong>resetImageSwaps ()</strong>
+    </dt>
+    <dd>
+    Reset image swaps.
+Undo all mapping done via calls to swapImage
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "loadSpriter"></a>
+    <strong>loadSpriter (path, directory)</strong>
+    </dt>
+    <dd>
+    Load Spriter.
+Load a spriter file and return an object that can be used to animate and render this data
+NOTE:  the object returned has Spriter set as a metatable reference, so the spriterData returned
+Essentially "inherits" all of the methods in Spriter
+All of the "self" references used in the above Spriter methods are expected to be referring to a valid spriterData
+Object loaded from a .scon file
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">path</span>
+
+        </li>
+        <li><span class="parameter">directory</span>
+        All spriter assets are expected to be relative to path/directory
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2024-10-29 11:23:26 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
