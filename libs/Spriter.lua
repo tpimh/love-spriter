@@ -961,10 +961,6 @@ function Spriter:buildFrameData()
 
 			--Now rotate our x, y by our parents rotation *around its x,y*
 			imageData.x, imageData.y = self:rotatePoint( imageData.x, imageData.y, parent.angle, parent.x, parent.y )
-		else
-			--We still need scale unparented objects 
-			imageData.x = imageData.x * imageData.scale_x
-			imageData.y = imageData.y * imageData.scale_y
 		end
 
 		
@@ -987,10 +983,12 @@ function Spriter:buildFrameData()
 		local xNext = nextObjectRef.x or 0
 		local yNext = nextObjectRef.y or 0
 		local angleNext = nextObjectRef.angle or 0
+		local scale_xNext = nextObjectRef.scale_x or 1
+		local scale_yNext = nextObjectRef.scale_y or 1
 		local currentSpin = objectRef.cycKey.spin
 		if not currentSpin then currentSpin = 0 end 
 
-		assert(xNext and yNext and angleNext, "nil next key value")
+		assert(xNext and yNext and angleNext and scale_xNext and scale_yNext, "nil next key value")
 
 		local angle1, angle2 = imageData.angle, angleNext
 
@@ -1018,9 +1016,13 @@ function Spriter:buildFrameData()
 		imageData.angleStart = imageData.angle
 		imageData.xStart = imageData.x
 		imageData.yStart = imageData.y
+		imageData.scale_xStart = imageData.scale_x
+		imageData.scale_yStart = imageData.scale_y
 		imageData.xNext = xNext
 		imageData.yNext = yNext
 		imageData.angleNext = angleNext
+		imageData.scale_xNext = scale_xNext
+		imageData.scale_yNext = scale_yNext
 		imageData.elapsed = 0
 		imageData.duration = duration
 
@@ -1439,12 +1441,28 @@ function Spriter:draw( x, y )
 			local pivotX = imageData.pivotX or 0
 			local pivotY = imageData.pivotY or 1
 
+			local key, keyIndex = self:getCurrentMainlineKey()
+			assert(key, "Animation key[1] " .. tostring(animationName) .. " not found")
+
+			local elapsed = self:getTime()
+			if key.time then
+				elapsed = elapsed - (key.time / 1000)
+			end
+
+			imageData.scale_x = rescale(elapsed, 0, imageData.duration, imageData.scale_xStart, imageData.scale_xNext)
+			imageData.scale_y = rescale(elapsed, 0, imageData.duration, imageData.scale_yStart, imageData.scale_yNext)
+			imageData.x = rescale(elapsed, 0, imageData.duration, imageData.xStart, imageData.xNext)
+			imageData.y = rescale(elapsed, 0, imageData.duration, imageData.yStart, imageData.yNext)
+			local angleAmount = rescale(elapsed, 0, imageData.duration, 0, 1)
+			imageData.angle = lerpAngle(imageData.angleStart, imageData.angleNext, angleAmount)
+			local tx, ty = self:spriterToScreen(imageData.x, imageData.y)
+
 			if not self.usingTexturePacker then
 				--Rescape pivot data from 0,1 to 0,w/h
 				pivotX = rescale( pivotX, 0, 1, 0, imageData.image:getWidth() )
 				--Love2D has Y inverted from Spriter behavior -- pivotY is height - pivotY value
 				pivotY = imageData.image:getHeight() - rescale( pivotY, 0, 1, 0, imageData.image:getHeight() )
-				love.graphics.draw(imageData.image, x, y, -imageData.angle, imageData.scale_x, imageData.scale_y, pivotX, pivotY)
+				love.graphics.draw(imageData.image, tx, ty, -imageData.angle, imageData.scale_x, imageData.scale_y, pivotX, pivotY)
 			else
 				assert(imageData.tile, "No imageData.tile")
 				local w, h = imageData.tile.w, imageData.tile.h
